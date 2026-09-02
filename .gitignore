@@ -1,2 +1,5 @@
 .*/
 test_vocab.json
+
+__pycache__/
+*.pyc

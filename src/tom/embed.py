@@ -18,4 +18,8 @@ def save_vocab(itos: list, path: Path):
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4)
 
-# save_vocab(build_vocab("hi hi hi  hi a aaaaabcdefghiji@%#$639t73983wg-[p[p]]"), Path("test_vocab.json"))
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+DATA_DIR = PROJECT_ROOT / "data"
+DATA_DIR.mkdir(exist_ok=True)
+
+save_vocab(build_vocab("hi hi hi  hi a aaaaabcdefghiji@%#$639t73983wg-[p[p]]"), DATA_DIR / "test_vocab.json")
