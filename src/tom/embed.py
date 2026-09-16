@@ -2,6 +2,7 @@ import json, hashlib
 from pathlib import Path
 
 import torch
+from torch import Tensor
 import torch.nn as nn
 
 
@@ -36,8 +37,14 @@ vocab.save_vocab("hi hi hi  hi a aaaaabcdefghiji@%#$639t73983wg-[p[p]]π🥺", f
 
 
 class Embedder(nn.Module):
-    def __init__(self):
-        pass
+    def __init__(self, vocab_size, max_seq_length, embedding_dim=256):
+        super().__init__()
+        self.tokenizer = nn.Embedding(vocab_size, embedding_dim, padding_idx=0)
+        self.positionator = nn.Embedding(max_seq_length, embedding_dim)
 
-    def forward(self, x):
-        return None
+    # x shape: [B, T] where T = CHUNK_SIZE
+    def forward(self, x: Tensor) -> Tensor:
+        tokens = self.tokenizer(x) # [B, T, D]
+        window = x.shape[1] # [T]
+        positions = self.positionator(torch.arange(window)) # [T, D]
+        return tokens + positions
