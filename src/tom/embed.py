@@ -5,6 +5,8 @@ import torch
 from torch import Tensor
 import torch.nn as nn
 
+from tom import constants
+
 
 class Vocab():
     def __init__(self):
@@ -31,10 +33,8 @@ class Vocab():
         itos = self.build_vocab(text)
         self.save_vocab_file(itos, DATA_DIR / file_name)
 
-
-vocab = Vocab()
-vocab.save_vocab("hi hi hi  hi a aaaaabcdefghiji@%#$639t73983wg-[p[p]]π🥺", file_name="test_vocab.json")
-
+    def load_vocab(self):
+        pass
 
 class Embedder(nn.Module):
     def __init__(self, vocab_size, max_seq_length, embedding_dim=256):
@@ -47,4 +47,15 @@ class Embedder(nn.Module):
         tokens = self.tokenizer(x) # [B, T, D]
         window = x.shape[1] # [T]
         positions = self.positionator(torch.arange(window)) # [T, D]
+        assert(positions.shape[0] == constants.CHUNK_SIZE)
         return tokens + positions
+
+
+
+
+
+
+vocab = Vocab()
+vocab.save_vocab("hi hi hi  hi a aaaaabcdefghiji@%#$639t73983wg-[p[p]]π🥺", file_name="test_vocab.json")
+
+# embedder = Embedder()
